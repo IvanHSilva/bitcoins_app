@@ -11,16 +11,46 @@ class CoinsPage extends StatefulWidget {
 }
 
 class _CoinsPageState extends State<CoinsPage> {
+  final coins = CoinRepository.coins;
+  NumberFormat real = NumberFormat.currency(locale: 'pt_BR', name: 'R\$');
+  List<Coin> selected = [];
+
+  appBarDynamic() {
+    if (selected.isEmpty) {
+      return AppBar(
+        title: const Text('Crypto Moedas'),
+        centerTitle: true,
+      );
+    } else {
+      return AppBar(
+        leading: IconButton(
+          onPressed: () {
+            setState(() {
+              selected = [];
+            });
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
+        title: Text('${selected.length} selecionada(s)'),
+        centerTitle: true,
+        backgroundColor: Colors.blueGrey[50],
+        elevation: 1,
+        iconTheme: const IconThemeData(color: Colors.black87),
+        titleTextStyle: const TextTheme(
+          titleLarge: TextStyle(
+            color: Colors.black87,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ).titleLarge,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final coins = CoinRepository.coins;
-    NumberFormat real = NumberFormat.currency(locale: 'pt_BR', name: 'R\$');
-    List<Coin> selected = [];
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cripto Moedas'),
-      ),
+      appBar: appBarDynamic(),
       body: ListView.separated(
         itemBuilder: (BuildContext context, int coin) {
           return ListTile(
@@ -68,6 +98,21 @@ class _CoinsPageState extends State<CoinsPage> {
         separatorBuilder: (_, __) => const Divider(),
         itemCount: coins.length,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: selected.isNotEmpty
+          ? FloatingActionButton.extended(
+              onPressed: () {},
+              icon: const Icon(Icons.star),
+              label: const Text(
+                'Favoritar',
+                style: TextStyle(
+                  fontSize: 20,
+                  letterSpacing: 0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
+          : null,
     );
   }
 }
