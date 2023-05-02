@@ -1,4 +1,5 @@
 import 'package:bitcoins_app/models/coin.dart';
+import 'package:bitcoins_app/pages/coins_details_page.dart';
 import 'package:bitcoins_app/repositories/coin_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -47,6 +48,15 @@ class _CoinsPageState extends State<CoinsPage> {
     }
   }
 
+  showDetails(Coin coin) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CoinsDetailsPage(coin: coin),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,6 +102,7 @@ class _CoinsPageState extends State<CoinsPage> {
                 debugPrint(coins[coin].toString());
               });
             },
+            onTap: () => showDetails(coins[coin]),
           );
         },
         padding: const EdgeInsets.all(16),
