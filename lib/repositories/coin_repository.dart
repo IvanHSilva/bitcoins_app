@@ -11,7 +11,7 @@ class CoinRepository {
     Coin(
       name: 'Ethereum',
       icon: 'assets/images/ethereum.png',
-      alias: 'RTH',
+      alias: 'ETH',
       price: 9716.00,
     ),
     Coin(
