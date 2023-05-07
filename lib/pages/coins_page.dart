@@ -1,8 +1,10 @@
 import 'package:bitcoins_app/models/coin.dart';
 import 'package:bitcoins_app/pages/coins_details_page.dart';
 import 'package:bitcoins_app/repositories/coin_repository.dart';
+import 'package:bitcoins_app/repositories/favorites_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CoinsPage extends StatefulWidget {
   const CoinsPage({super.key});
@@ -15,6 +17,7 @@ class _CoinsPageState extends State<CoinsPage> {
   final coins = CoinRepository.coins;
   NumberFormat real = NumberFormat.currency(locale: 'pt_BR', name: 'R\$');
   List<Coin> selected = [];
+  late FavoritesRepository favorites;
 
   appBarDynamic() {
     if (selected.isEmpty) {
@@ -57,8 +60,17 @@ class _CoinsPageState extends State<CoinsPage> {
     );
   }
 
+  clearSelected() {
+    setState(() {
+      selected = [];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    //favorites = Provider.of<FavoritesRepository>(context);
+    favorites = context.watch<FavoritesRepository>();
+
     return Scaffold(
       appBar: appBarDynamic(),
       body: ListView.separated(
@@ -75,12 +87,22 @@ class _CoinsPageState extends State<CoinsPage> {
                     width: 50,
                     child: Image.asset(coins[coin].icon),
                   ),
-            title: Text(
-              coins[coin].name,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
+            title: Row(
+              children: [
+                Text(
+                  coins[coin].name,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (favorites.favorites.contains(coins[coin]))
+                  const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                    size: 25,
+                  ),
+              ],
             ),
             trailing: Text(
               real.format(coins[coin].price),
@@ -97,9 +119,9 @@ class _CoinsPageState extends State<CoinsPage> {
                 (selected.contains(coins[coin]))
                     ? selected.remove(coins[coin])
                     : selected.add(coins[coin]);
-                debugPrint(coins[coin].name);
-                debugPrint(selected.contains(coins[coin]).toString());
-                debugPrint(coins[coin].toString());
+                // debugPrint(coins[coin].name);
+                // debugPrint(selected.contains(coins[coin]).toString());
+                // debugPrint(coins[coin].toString());
               });
             },
             onTap: () => showDetails(coins[coin]),
@@ -112,7 +134,10 @@ class _CoinsPageState extends State<CoinsPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: selected.isNotEmpty
           ? FloatingActionButton.extended(
-              onPressed: () {},
+              onPressed: () {
+                favorites.saveAll(selected);
+                clearSelected();
+              },
               icon: const Icon(Icons.star),
               label: const Text(
                 'Favoritar',
