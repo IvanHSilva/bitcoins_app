@@ -11,7 +11,7 @@ class CoinCard extends StatefulWidget {
   const CoinCard({super.key, required this.coin});
 
   @override
-  _CoinCardState createState() => _CoinCardState();
+  State createState() => _CoinCardState();
 }
 
 class _CoinCardState extends State<CoinCard> {

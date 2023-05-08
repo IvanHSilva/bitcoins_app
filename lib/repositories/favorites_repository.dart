@@ -8,9 +8,9 @@ class FavoritesRepository extends ChangeNotifier {
   UnmodifiableListView<Coin> get favorites => UnmodifiableListView(_favorites);
 
   saveAll(List<Coin> coins) {
-    coins.forEach((coin) {
+    for (Coin coin in coins) {
       if (!_favorites.contains(coin)) _favorites.add(coin);
-    });
+    }
     notifyListeners();
   }
 

@@ -1,3 +1,4 @@
+import 'package:bitcoins_app/configs/app_settings.dart';
 import 'package:bitcoins_app/models/coin.dart';
 import 'package:bitcoins_app/pages/coins_details_page.dart';
 import 'package:bitcoins_app/repositories/coin_repository.dart';
@@ -15,14 +16,46 @@ class CoinsPage extends StatefulWidget {
 
 class _CoinsPageState extends State<CoinsPage> {
   final coins = CoinRepository.coins;
-  NumberFormat real = NumberFormat.currency(locale: 'pt_BR', name: 'R\$');
+  late NumberFormat real;
+  late Map<String, String> loc;
   List<Coin> selected = [];
   late FavoritesRepository favorites;
+
+  readNumberFormat() {
+    loc = context.watch<AppSettings>().locale;
+    real = NumberFormat.currency(locale: loc['locale'], name: loc['name']);
+  }
+
+  changeLanguageButton() {
+    final locale = loc['locale'] == 'pt_BR' ? 'en_US' : 'pt_BR';
+    final name = loc['locale'] == 'pt_BR' ? 'US\$ ' : 'R\$';
+
+    return PopupMenuButton(
+      icon: const Icon(Icons.language),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          child: ListTile(
+            leading: const Icon(Icons.swap_vert),
+            title: Text('Usar $locale'),
+            onTap: () {
+              context.read<AppSettings>().setLocale(locale, name);
+              // print(locale);
+              // print(name);
+              Navigator.pop(context);
+            },
+          ),
+        ),
+      ],
+    );
+  }
 
   appBarDynamic() {
     if (selected.isEmpty) {
       return AppBar(
         title: const Text('Crypto Moedas'),
+        actions: [
+          changeLanguageButton(),
+        ],
         centerTitle: true,
       );
     } else {
@@ -70,6 +103,7 @@ class _CoinsPageState extends State<CoinsPage> {
   Widget build(BuildContext context) {
     //favorites = Provider.of<FavoritesRepository>(context);
     favorites = context.watch<FavoritesRepository>();
+    readNumberFormat();
 
     return Scaffold(
       appBar: appBarDynamic(),
