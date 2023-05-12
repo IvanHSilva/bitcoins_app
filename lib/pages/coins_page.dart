@@ -130,7 +130,9 @@ class _CoinsPageState extends State<CoinsPage> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (favorites.favorites.contains(coins[coin]))
+                //if (favorites.favorites.contains(coins[coin]))
+                if (favorites.favorites
+                    .any((fav) => fav.alias == coins[coin].alias))
                   const Icon(
                     Icons.star,
                     color: Colors.amber,
