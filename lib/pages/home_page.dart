@@ -1,6 +1,7 @@
 import 'package:bitcoins_app/pages/coins_page.dart';
 import 'package:flutter/material.dart';
 
+import 'configurations_page.dart';
 import 'favorites_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -35,6 +36,7 @@ class _HomePageState extends State<HomePage> {
         children: const [
           CoinsPage(),
           FavoritesPage(),
+          ConfigurationsPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -47,6 +49,10 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.star),
             label: 'Favoritas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Configurações',
           ),
         ],
         onTap: (page) {

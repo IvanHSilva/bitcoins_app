@@ -1,4 +1,5 @@
 import 'package:bitcoins_app/configs/app_settings.dart';
+import 'package:bitcoins_app/repositories/account_repository.dart';
 import 'package:bitcoins_app/repositories/favorites_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => AccountRepository()),
         ChangeNotifierProvider(create: (context) => AppSettings()),
         ChangeNotifierProvider(create: (context) => FavoritesRepository()),
       ],
