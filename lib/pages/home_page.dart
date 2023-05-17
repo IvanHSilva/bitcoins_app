@@ -1,8 +1,9 @@
-import 'package:bitcoins_app/pages/coins_page.dart';
 import 'package:flutter/material.dart';
 
+import 'coins_page.dart';
 import 'configurations_page.dart';
 import 'favorites_page.dart';
+import 'wallet_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,11 +37,13 @@ class _HomePageState extends State<HomePage> {
         children: const [
           CoinsPage(),
           FavoritesPage(),
+          WalletPage(),
           ConfigurationsPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: actualPage,
+        type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
@@ -49,6 +52,10 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.star),
             label: 'Favoritas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_balance_wallet),
+            label: 'Carteira',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
