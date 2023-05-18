@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../models/coin.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../models/coin.dart';
+import '../repositories/account_repository.dart';
 
 class CoinsDetailsPage extends StatefulWidget {
   final Coin coin;
@@ -13,15 +15,20 @@ class CoinsDetailsPage extends StatefulWidget {
 }
 
 class _CoinsDetailsPageState extends State<CoinsDetailsPage> {
+  //
   NumberFormat real = NumberFormat.currency(locale: 'pt_BR', name: 'R\$');
   final _form = GlobalKey<FormState>();
   final _value = TextEditingController();
   double quantity = 0;
+  late AccountRepository account;
 
-  buyCoin() {
+  buyCoin() async {
+    //
     if (_form.currentState!.validate()) {
       // Save buy
-      Navigator.pop(context);
+      await account.buyCoin(widget.coin, double.parse(_value.text));
+      if (!mounted) return; // to avoid BuildContext across async
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Compra realizada com sucesso!'),
@@ -32,6 +39,9 @@ class _CoinsDetailsPageState extends State<CoinsDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    //
+    account = Provider.of<AccountRepository>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.coin.name),
@@ -105,6 +115,8 @@ class _CoinsDetailsPageState extends State<CoinsDetailsPage> {
                     return 'Informe o valor da compra';
                   } else if (double.parse(value) < 50) {
                     return 'Compra mínima deve ser ao menos R\$ 50,00';
+                  } else if (double.parse(value) > account.balance) {
+                    return 'Saldo insuficiente para compra';
                   }
                   return null;
                 },

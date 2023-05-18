@@ -13,13 +13,16 @@ class DB {
   static Database? _database;
 
   get database async {
-    if (_database != null) return _database;
+    if (_database != null) {
+      //print('Caminho ' + _database!.path);
+      return _database;
+    }
     return await _initDatabase();
   }
 
   _initDatabase() async {
     return await openDatabase(
-      join(await getDatabasesPath(), 'crypt.db'),
+      'E:\\DEV-Projects\\Flutter\\apps\\times\\bitcoin_app\\bitcoins_app\\assets\\databases\\crypto.db',
       version: 1,
       onCreate: _onCreate,
     );
